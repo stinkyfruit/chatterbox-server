@@ -17,9 +17,9 @@ var messages = [];
 var requestHandler = function(request, response) {
 
   console.log("Serving request type " + request.method + " for url " + request.url);
-  if (request.method === "GET" && request.url === "/classes/messages" || request.url === "/classes/room1") {
+  if (request.method === "GET" && (request.url === "/classes/messages" || request.url === "/classes/room1")) {
     handleResponse(response, {'results': messages}); 
-  } else if (request.method === "POST" && request.url === "/classes/messages" || request.url === "/classes/room1") {
+  } else if (request.method === "POST" && (request.url === "/classes/messages" || request.url === "/classes/room1")) {
     //console.log(request);
     var data = "";
     request.on("data", function(chunk){
@@ -29,7 +29,7 @@ var requestHandler = function(request, response) {
       messages.push(JSON.parse(data));
       handleResponse(response, messages, 201); 
     });
-  } else if (request.method === "OPTIONS" && request.url === "/classes/messages" || request.url === "/classes/room1") {
+  } else if (request.method === "OPTIONS" && (request.url === "/classes/messages" || request.url === "/classes/room1")) {
     handleResponse(response, null);
   } else {
     handleResponse(response, null, 404);
