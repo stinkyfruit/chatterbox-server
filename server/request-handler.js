@@ -13,23 +13,26 @@ var handleResponse = function(response, data, statusCode) {
 };
 
 var messages = [];
+var objectId = 1;
 
 var requestHandler = function(request, response) {
 
   console.log("Serving request type " + request.method + " for url " + request.url);
-  if (request.method === "GET" && (request.url === "/classes/messages" || request.url === "/classes/room1")) {
-    handleResponse(response, {'results': messages}); 
-  } else if (request.method === "POST" && (request.url === "/classes/messages" || request.url === "/classes/room1")) {
+  if (request.method === "GET" && (request.url === "/classes/messages" || request.url === "/classes/room1" || request.url === "/classes/chatterbox/")) {
+    handleResponse(response, {'results': messages});
+  } else if (request.method === "POST" && (request.url === "/classes/messages" || request.url === "/classes/room1" || request.url === "/classes/chatterbox/")) {
     //console.log(request);
     var data = "";
     request.on("data", function(chunk){
       data += chunk;
     });
     request.on("end", function(){
-      messages.push(JSON.parse(data));
-      handleResponse(response, messages, 201); 
+      var messageInfo = JSON.parse(data);
+      messageInfo.objectId = objectId++;
+      messages.push(messageInfo);
+      handleResponse(response, messageInfo, 201);
     });
-  } else if (request.method === "OPTIONS" && (request.url === "/classes/messages" || request.url === "/classes/room1")) {
+  } else if (request.method === "OPTIONS" && (request.url === "/classes/messages" || request.url === "/classes/room1" || request.url === "/classes/chatterbox/")) {
     handleResponse(response, null);
   } else {
     handleResponse(response, null, 404);
